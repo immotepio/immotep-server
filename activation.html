@@ -66,13 +66,16 @@
         const key = document.getElementById('key').value;
 
         try {
-          const response = await fetch('/verify-key', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, key }),
-          });
+          const response = await fetch(
+            'https://immotep-server.onrender.com/verify-key',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email, key }),
+            }
+          );
 
           const data = await response.json();
 
