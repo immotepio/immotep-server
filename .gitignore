@@ -1,3 +1,28 @@
+# Dependencies
 node_modules/
+jspm_packages/
+
+# Environment variables
 .env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Logs
+logs
 *.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Mac system files
+.DS_Store
+
+# Cache directories
+.cache
+.npm
+.parcel-cache
