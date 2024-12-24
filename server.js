@@ -252,6 +252,15 @@ app.post('/verify-key', async (req, res) => {
   }
 });
 
+// Route racine pour le health check de Render
+// Cette route simple permet à Render de vérifier que le serveur répond correctement
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Server is running and healthy',
+  });
+});
+
 // Webhook Stripe
 app.post(
   '/webhook',
