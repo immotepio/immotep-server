@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Paiement Premium</title>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <h1>Extension Premium</h1>
+    <p>Accès à vie pour seulement 9.99€</p>
+    <button id="checkout-button">Payer maintenant</button>
+
+    <script>
+      const stripe = Stripe(
+        'pk_test_51PUoC7IpWJwgvM8bwaquIaRM7W7yEPzJLhP1PUgLdkCHzzVf7Xfr6dyKMvAUNsJQRaPWN2uKjKeyuE2kLy2p6BES00Hwe2lQKd'
+      );
+      const checkoutButton = document.getElementById('checkout-button');
+
+      checkoutButton.addEventListener('click', async () => {
+        const response = await fetch('http://localhost:3000/create-session', {
+          method: 'POST',
+        });
+
+        const session = await response.json();
+
+        const result = await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+      });
+    </script>
+  </body>
+</html>
