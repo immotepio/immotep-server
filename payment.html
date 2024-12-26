@@ -10,25 +10,37 @@
     <button id="checkout-button">Payer maintenant</button>
 
     <script>
-      const stripe = Stripe(
-        'pk_live_51PUoC7IpWJwgvM8bYhYFpPIcpcaQncJBeiYfM7teIBW5zOEEilDGOo8cgyRTJKPcqNgtXQHw9tiaISstV9wsR3Cw0043lPVuXC'
-      );
-      const checkoutButton = document.getElementById('checkout-button');
-
-      checkoutButton.addEventListener('click', async () => {
+      // Récupérer le mode Stripe depuis le serveur
+      async function getStripeKey() {
         const response = await fetch(
-          'https://immotep-server.onrender.com/create-session',
-          {
-            method: 'POST',
-          }
+          'https://immotep-server.onrender.com/stripe-mode'
         );
+        const data = await response.json();
+        return data.publicKey;
+      }
 
-        const session = await response.json();
+      async function initializeStripe() {
+        const publicKey = await getStripeKey();
+        const stripe = Stripe(publicKey);
 
-        const result = await stripe.redirectToCheckout({
-          sessionId: session.id,
+        const checkoutButton = document.getElementById('checkout-button');
+
+        checkoutButton.addEventListener('click', async () => {
+          const response = await fetch(
+            'https://immotep-server.onrender.com/create-session',
+            {
+              method: 'POST',
+            }
+          );
+
+          const session = await response.json();
+          const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+          });
         });
-      });
+      }
+
+      initializeStripe();
     </script>
   </body>
 </html>

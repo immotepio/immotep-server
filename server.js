@@ -1,12 +1,18 @@
+// Mode Stripe (true = production, false = test)
+const STRIPE_MODE = false;
+
 // Configuration des modules requis
 require('dotenv').config();
 const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(
+  STRIPE_MODE
+    ? process.env.STRIPE_LIVE_SECRET_KEY
+    : process.env.STRIPE_TEST_SECRET_KEY
+);
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-
 // Import du modèle MongoDB
 const ActivationKey = require('./models/ActivationKey');
 
@@ -178,6 +184,13 @@ app.post('/create-session', async (req, res) => {
   }
 });
 
+app.get('/stripe-mode', (req, res) => {
+  const publicKey = STRIPE_MODE
+    ? process.env.STRIPE_LIVE_PUBLIC_KEY
+    : process.env.STRIPE_TEST_PUBLIC_KEY;
+  res.json({ publicKey });
+});
+
 // Route pour gérer le succès du paiement
 app.get('/success', async (req, res) => {
   try {
@@ -273,7 +286,9 @@ app.post(
       event = stripe.webhooks.constructEvent(
         request.body,
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET
+        STRIPE_MODE
+          ? process.env.STRIPE_LIVE_WEBHOOK_SECRET
+          : process.env.STRIPE_TEST_WEBHOOK_SECRET
       );
     } catch (err) {
       console.error('Erreur webhook:', err);
