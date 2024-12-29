@@ -135,17 +135,40 @@ async function sendActivationEmail(customerEmail, activationKey) {
     to: customerEmail,
     subject: "Votre clé d'activation Premium",
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1>Merci pour votre achat !</h1>
-        <p>Voici votre clé d'activation pour l'extension Premium :</p>
-        <h2 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">${activationKey}</h2>
-        <p>Cette clé peut être utilisée jusqu'à 2 fois.</p>
-        <p>Pour activer votre compte premium, veuillez :</p>
-        <ol>
-          <li>Ouvrir l'extension</li>
-          <li>Cliquer sur "Activer Premium"</li>
-          <li>Entrer votre email et la clé d'activation ci-dessus</li>
-        </ol>
+      <div style="max-width: 600px; margin: 0 auto; padding: 32px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+        <div style="background: white; padding: 32px; border-radius: 10px; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">
+          <!-- En-tête -->
+          <div style="text-align: center; margin-bottom: 32px;">
+            <h1 style="color: #2d3748; font-size: 28px; margin-bottom: 16px; font-family: Arial, sans-serif;">Bienvenue chez Immotep Premium!</h1>
+            <p style="color: #4a5568; font-size: 16px; line-height: 1.6;">Merci d'avoir choisi notre extension.</p>
+          </div>
+
+          <!-- Section Clé d'activation -->
+          <div style="background-color: #f7fafc; padding: 24px; border-radius: 12px; margin-bottom: 32px; text-align: center;">
+            <p style="color: #718096; margin-bottom: 12px; font-size: 14px;">VOTRE CLÉ D'ACTIVATION</p>
+            <div style="background: #77be79; color: white; padding: 16px; border-radius: 8px; font-size: 20px; letter-spacing: 2px; font-family: monospace;">
+              ${activationKey}
+            </div>
+            <p style="color: #718096; margin-top: 12px; font-size: 13px;">Cette clé peut être utilisée jusqu'à 2 fois</p>
+          </div>
+
+          <!-- Instructions -->
+          <div style="margin-bottom: 32px;">
+            <h2 style="color: #2d3748; font-size: 18px; margin-bottom: 16px;">Comment activer votre compte ?</h2>
+            <div style="background: #f7fafc; padding: 20px; border-radius: 8px;">
+              <ol style="color: #4a5568; margin: 0; padding-left: 20px;">
+                <li style="margin-bottom: 12px;">Ouvrez l'extension Immotep</li>
+                <li style="margin-bottom: 12px;">Cliquez sur "Activer Premium"</li>
+                <li style="margin-bottom: 12px;">Entrez votre email et la clé d'activation ci-dessus</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="text-align: center; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #718096; font-size: 14px;">Des questions ? Contactez-nous à ${process.env.EMAIL_USER}</p>
+          </div>
+        </div>
       </div>
     `,
   };
