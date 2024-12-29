@@ -3,75 +3,193 @@
   <head>
     <title>Activation Premium</title>
     <style>
+      @font-face {
+        font-family: "Gilroy_Bold";
+        src: url("/fonts/Gilroy-Bold.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "Gilroy_Medium";
+        src: url("/fonts/Gilroy-Medium.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "Gilroy_Regular";
+        src: url("/fonts/Gilroy-Regular.ttf") format("truetype");
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         padding: 20px;
       }
-      .form-group {
-        margin-bottom: 15px;
+
+      .app_container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 400px;
+        margin-top: 24px;
       }
+
+      #AppCentered {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 24px;
+        width: 100%;
+        background: white;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border-radius: 10px;
+        font-family: "Gilroy_Medium";
+      }
+
+      h1 {
+        font-family: "Gilroy_Bold";
+        font-size: 24px;
+        margin-bottom: 24px;
+        text-align: center;
+        color: #2d3748;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
       label {
         display: block;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        font-family: "Gilroy_Bold";
+        font-size: 15px;
+        color: #4a5568;
       }
+
       input {
         width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
+        padding: 10px;
+        border: 2px solid #e2e8f0;
+        border-radius: 7px;
+        height: 40px;
+        text-align: left;
+        font-size: 14px;
+        font-family: "Gilroy_Regular";
+        background-color: white;
+        color: black;
+        transition: border-color 0.3s ease;
       }
+
+      input:focus {
+        outline: none;
+        border-color: #a390d9;
+      }
+
       button {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 20px;
+        font-family: "Gilroy_Bold";
+        background-color: #77be79;
         border: none;
-        border-radius: 4px;
+        color: white;
+        padding: 12px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        font-size: 16px;
+        margin-top: 24px;
         cursor: pointer;
+        border-radius: 12px;
+        transition: background-color 0.3s ease;
       }
+
+      button:hover {
+        background-color: #337e37;
+      }
+
+      button:active {
+        background-color: #2ba72f;
+      }
+
       .error {
-        color: red;
+        color: #e53e3e;
+        background: #fff5f5;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 12px;
         display: none;
-        margin-top: 5px;
+        text-align: center;
+        font-family: "Gilroy_Medium";
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Activation Extension Premium</h1>
+    <div class="app_container">
+      <div id="AppCentered">
+        <h1>Activation Extension Premium</h1>
 
-    <form id="activationForm">
-      <div class="form-group">
-        <label for="email">Email :</label>
-        <input type="email" id="email" required />
+        <form id="activationForm">
+          <div class="form-group">
+            <label for="email">Email :</label>
+            <input
+              type="email"
+              id="email"
+              required
+              placeholder="Votre adresse email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="key">Clé d'activation :</label>
+            <input
+              type="text"
+              id="key"
+              required
+              placeholder="Votre clé d'activation"
+            />
+          </div>
+
+          <div id="error" class="error">Email ou clé d'activation invalide</div>
+
+          <button type="submit">Activer Premium</button>
+        </form>
       </div>
-
-      <div class="form-group">
-        <label for="key">Clé d'activation :</label>
-        <input type="text" id="key" required />
-      </div>
-
-      <div id="error" class="error">Email ou clé d'activation invalide</div>
-
-      <button type="submit">Activer Premium</button>
-    </form>
+    </div>
 
     <script>
-      const form = document.getElementById('activationForm');
-      const errorDiv = document.getElementById('error');
+      const form = document.getElementById("activationForm");
+      const errorDiv = document.getElementById("error");
 
-      form.addEventListener('submit', async (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const key = document.getElementById('key').value;
+        const email = document.getElementById("email").value;
+        const key = document.getElementById("key").value;
 
         try {
           const response = await fetch(
-            'https://immotep-server.onrender.com/verify-key',
+            "https://immotep-server.onrender.com/verify-key",
             {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({ email, key }),
             }
@@ -80,21 +198,21 @@
           const data = await response.json();
 
           if (data.valid) {
-            window.opener.postMessage({ type: 'payment_success' }, '*');
+            window.opener.postMessage({ type: "payment_success" }, "*");
             alert(
-              'Activation réussie ! Vous pouvez maintenant fermer cette fenêtre.'
+              "Activation réussie ! Vous pouvez maintenant fermer cette fenêtre."
             );
             window.close();
           } else {
-            errorDiv.textContent = data.message || 'Clé invalide';
-            errorDiv.style.display = 'block';
+            errorDiv.textContent = data.message || "Clé invalide";
+            errorDiv.style.display = "block";
             setTimeout(() => {
-              errorDiv.style.display = 'none';
+              errorDiv.style.display = "none";
             }, 3000);
           }
         } catch (error) {
-          errorDiv.textContent = 'Erreur lors de la vérification';
-          errorDiv.style.display = 'block';
+          errorDiv.textContent = "Erreur lors de la vérification";
+          errorDiv.style.display = "block";
         }
       });
     </script>
