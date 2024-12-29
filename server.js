@@ -390,6 +390,33 @@ app.post(
   }
 );
 
+// Ajoutez cette nouvelle route à votre server.js
+app.post("/generate-bulk-keys", async (req, res) => {
+  try {
+    const email = "user@immotep.io";
+    const numberOfKeys = 100;
+    const generatedKeys = await generateBulkKeys(email, numberOfKeys);
+
+    // Créer un fichier CSV avec les clés
+    let csvContent = "Clé d'activation\n";
+    generatedKeys.forEach((key) => {
+      csvContent += `${key}\n`;
+    });
+
+    // Configurer les en-têtes pour le téléchargement
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=immotep_activation_keys.csv"
+    );
+
+    res.send(csvContent);
+  } catch (error) {
+    console.error("Erreur lors de la génération des clés:", error);
+    res.status(500).json({ error: "Erreur lors de la génération des clés" });
+  }
+});
+
 // Démarrage du serveur avec configuration pour environnement local et production
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () =>
