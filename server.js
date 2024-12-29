@@ -202,6 +202,7 @@ app.get("/stripe-mode", (req, res) => {
 });
 
 // Route pour gérer le succès du paiement
+// Route pour gérer le succès du paiement
 app.get("/success", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(
@@ -219,24 +220,95 @@ app.get("/success", async (req, res) => {
 
       await sendActivationEmail(customerEmail, activationKey);
 
-      res.send(`
-        <html>
-          <body>
-            <h1>Paiement réussi!</h1>
-            <p>Votre extension est maintenant en version premium.</p>
-            <p>Un email contenant votre clé d'activation a été envoyé à ${customerEmail}</p>
-            <script>
-              window.opener.postMessage({ type: 'payment_success' }, '*');
-            </script>
-          </body>
-        </html>
-      `);
+      // Lecture du template HTML
+      let successTemplate = require("fs").readFileSync(
+        path.join(__dirname, "success.html"),
+        "utf8"
+      );
+
+      // Remplacement de la variable dans le template
+      successTemplate = successTemplate.replace(
+        "${customerEmail}",
+        customerEmail
+      );
+
+      res.send(successTemplate);
     }
   } catch (error) {
     console.error("Erreur traitement succès:", error);
-    res
-      .status(500)
-      .send("Une erreur est survenue lors de la génération de votre clé");
+    res.status(500).send(`
+      <html>
+        <head>
+          <title>Erreur - Immotep Premium</title>
+          <style>
+            @font-face {
+              font-family: 'Gilroy_Bold';
+              src: url('/fonts/Gilroy-Bold.ttf') format('truetype');
+            }
+            @font-face {
+              font-family: 'Gilroy_Medium';
+              src: url('/fonts/Gilroy-Medium.ttf') format('truetype');
+            }
+            * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+            }
+            body {
+              display: flex;
+              justify-content: center;
+              min-height: 100vh;
+              background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              padding: 20px;
+              font-family: 'Gilroy_Medium', sans-serif;
+            }
+            .app_container {
+              display: flex;
+              justify-content: center;
+              width: 100%;
+              max-width: 500px;
+              margin-top: 24px;
+            }
+            #AppCentered {
+              display: flex;
+              justify-content: center;
+              flex-direction: column;
+              align-items: center;
+              padding: 32px;
+              width: 100%;
+              background: white;
+              box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+              border-radius: 10px;
+            }
+            h1 {
+              font-family: 'Gilroy_Bold';
+              font-size: 24px;
+              color: #e53e3e;
+              margin-bottom: 24px;
+              text-align: center;
+            }
+            .message {
+              font-family: 'Gilroy_Medium';
+              font-size: 16px;
+              color: #4a5568;
+              text-align: center;
+              line-height: 1.6;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="app_container">
+            <div id="AppCentered">
+              <h1>Une erreur est survenue</h1>
+              <p class="message">
+                Nous n'avons pas pu générer votre clé d'activation.<br>
+                Veuillez nous contacter pour résoudre ce problème.
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
   }
 });
 
