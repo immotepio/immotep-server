@@ -4,6 +4,7 @@ const STRIPE_MODE = false;
 // Configuration des modules requis
 require("dotenv").config();
 const express = require("express");
+const path = require("path"); // Ajout du module path
 const stripe = require("stripe")(
   STRIPE_MODE
     ? process.env.STRIPE_LIVE_SECRET_KEY
@@ -20,13 +21,17 @@ const ActivationKey = require("./models/ActivationKey");
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// Configuration pour servir les fichiers statiques
 app.use(express.static(__dirname));
 app.use("/fonts", express.static(path.join(__dirname, "fonts")));
 
+// Middleware de débogage pour les polices
 app.use("/fonts", (req, res, next) => {
   console.log("Requête de police:", req.path);
   next();
 });
+
 // Connexion à MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -39,7 +44,6 @@ mongoose
   .catch((err) => {
     console.error("Erreur de connexion à MongoDB:", err);
   });
-
 // Fonction pour générer une clé unique d'activation
 function generateUniqueKey() {
   const key = crypto.randomBytes(8).toString("hex");
