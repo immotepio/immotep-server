@@ -4,18 +4,18 @@
     <title>Paiement Réussi - Immotep Premium</title>
     <style>
       @font-face {
-        font-family: "Gilroy_Bold";
-        src: url("/fonts/Gilroy-Bold.ttf") format("truetype");
+        font-family: 'Gilroy_Bold';
+        src: url('/fonts/Gilroy-Bold.ttf') format('truetype');
       }
 
       @font-face {
-        font-family: "Gilroy_Medium";
-        src: url("/fonts/Gilroy-Medium.ttf") format("truetype");
+        font-family: 'Gilroy_Medium';
+        src: url('/fonts/Gilroy-Medium.ttf') format('truetype');
       }
 
       @font-face {
-        font-family: "Gilroy_Regular";
-        src: url("/fonts/Gilroy-Regular.ttf") format("truetype");
+        font-family: 'Gilroy_Regular';
+        src: url('/fonts/Gilroy-Regular.ttf') format('truetype');
       }
 
       * {
@@ -30,7 +30,7 @@
         min-height: 100vh;
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         padding: 20px;
-        font-family: "Gilroy_Regular", sans-serif;
+        font-family: 'Gilroy_Regular', sans-serif;
       }
 
       .app_container {
@@ -87,7 +87,7 @@
       }
 
       h1 {
-        font-family: "Gilroy_Bold";
+        font-family: 'Gilroy_Bold';
         font-size: 28px;
         color: #2d3748;
         margin-bottom: 16px;
@@ -95,7 +95,7 @@
       }
 
       .message {
-        font-family: "Gilroy_Medium";
+        font-family: 'Gilroy_Medium';
         font-size: 16px;
         color: #4a5568;
         text-align: center;
@@ -118,12 +118,12 @@
       }
 
       .email-value {
-        font-family: "Gilroy_Bold";
+        font-family: 'Gilroy_Bold';
         color: #2d3748;
       }
 
       .close-button {
-        font-family: "Gilroy_Bold";
+        font-family: 'Gilroy_Bold';
         background-color: #77be79;
         border: none;
         color: white;
@@ -166,7 +166,7 @@
       </div>
     </div>
     <script>
-      window.opener.postMessage({ type: "payment_success" }, "*");
+      window.opener.postMessage({ type: 'payment_success' }, '*');
     </script>
   </body>
 </html>
