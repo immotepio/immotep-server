@@ -1,14 +1,19 @@
 {
-  "name": "stripe-test",
+  "name": "immotep-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "immotep",
+    "server",
+    "stripe"
+  ],
+  "author": "PostProduction Paris",
   "license": "ISC",
-  "description": "",
+  "description": "Serveur pour l'extension Immotep avec gestion de paiements Stripe",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
