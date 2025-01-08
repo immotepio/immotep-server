@@ -48,19 +48,67 @@
         font-size: 2rem;
       }
 
-      .price {
-        color: #4a5568;
-        font-size: 1.25rem;
+      .donation-container {
         margin-bottom: 1.5rem;
-        padding: 1rem;
-        background: #f7fafc;
-        border-radius: 12px;
-        display: inline-block;
+      }
+
+      .donation-title {
+        color: #4a5568;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+
+      .amount-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .amount-button {
+        padding: 0.5rem 1rem;
+        border: 2px solid #4299e1;
+        border-radius: 8px;
+        background: white;
+        color: #4299e1;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .amount-button.selected {
+        background: #4299e1;
+        color: white;
+      }
+
+      .custom-amount {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .custom-amount input {
+        width: 80px;
+        padding: 0.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .proceed-button {
+        background: #4299e1;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
       }
 
       #loading {
         color: #718096;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         gap: 10px;
@@ -97,7 +145,31 @@
   <body>
     <div class="container">
       <h1>Extension Premium</h1>
-      <div class="price">Accès à vie pour seulement 9.99€</div>
+      <div class="donation-container">
+        <div class="donation-title">
+          Choisissez votre contribution (minimum 10€)
+        </div>
+        <div class="amount-buttons">
+          <button class="amount-button" data-amount="10">10€</button>
+          <button class="amount-button selected" data-amount="15">15€</button>
+          <button class="amount-button" data-amount="20">20€</button>
+        </div>
+        <div class="custom-amount">
+          <span>Montant personnalisé:</span>
+          <input
+            type="number"
+            id="custom-amount"
+            min="10"
+            value="15"
+            step="1"
+            placeholder="Minimum 10€"
+          />
+          <span>€</span>
+        </div>
+        <button class="proceed-button" onclick="handlePayment()">
+          Continuer
+        </button>
+      </div>
       <div id="loading">
         <div class="spinner"></div>
         Redirection vers le paiement en cours...
@@ -106,20 +178,59 @@
     </div>
 
     <script>
-      async function redirectToCheckout() {
+      // Gestion des boutons de montant
+      const amountButtons = document.querySelectorAll(".amount-button");
+      const customAmountInput = document.getElementById("custom-amount");
+
+      amountButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          amountButtons.forEach((btn) => btn.classList.remove("selected"));
+          button.classList.add("selected");
+          customAmountInput.value = button.dataset.amount;
+        });
+      });
+
+      customAmountInput.addEventListener("input", () => {
+        amountButtons.forEach((btn) => btn.classList.remove("selected"));
+        // Afficher un message d'aide si le montant est inférieur à 10
+        const errorDiv = document.getElementById("error");
+        if (customAmountInput.value && parseInt(customAmountInput.value) < 10) {
+          errorDiv.textContent = "Le montant minimum est de 10€";
+          errorDiv.style.display = "block";
+        } else {
+          errorDiv.style.display = "none";
+        }
+      });
+
+      async function handlePayment() {
+        const amount = parseInt(customAmountInput.value);
+        if (!amount || amount < 10) {
+          const errorDiv = document.getElementById("error");
+          errorDiv.textContent = "Le montant minimum est de 10€";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        document.querySelector(".donation-container").style.display = "none";
+        document.getElementById("loading").style.display = "flex";
+
         try {
           // Récupérer la clé publique Stripe
           const response = await fetch(
-            "https://immotep-server.onrender.com/stripe-mode"
+            "https://immotep-server-production.up.railway.app/stripe-mode"
           );
           const data = await response.json();
           const stripe = Stripe(data.publicKey);
 
-          // Créer la session
+          // Créer la session avec le montant personnalisé
           const sessionResponse = await fetch(
-            "https://immotep-server.onrender.com/create-session",
+            "https://immotep-server-production.up.railway.app/create-session",
             {
               method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ amount: amount * 100 }), // Convertir en centimes pour Stripe
             }
           );
           const session = await sessionResponse.json();
@@ -133,12 +244,10 @@
           errorDiv.textContent = "Une erreur est survenue. Veuillez réessayer.";
           errorDiv.style.display = "block";
           document.getElementById("loading").style.display = "none";
+          document.querySelector(".donation-container").style.display = "block";
           console.error("Erreur:", error);
         }
       }
-
-      // Lancer la redirection automatiquement
-      redirectToCheckout();
     </script>
   </body>
 </html>
