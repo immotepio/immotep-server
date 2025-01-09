@@ -128,6 +128,56 @@
         animation: fadeIn 0.3s ease-out;
       }
 
+      .success {
+        display: none;
+        text-align: center;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .success-icon {
+        width: 60px;
+        height: 60px;
+        background-color: #77be79;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 16px;
+      }
+
+      .checkmark {
+        width: 24px;
+        height: 24px;
+        border: 3px solid white;
+        border-left: 0;
+        border-top: 0;
+        transform: rotate(45deg);
+        margin-top: -4px;
+      }
+
+      .success h2 {
+        font-family: 'Gilroy_Bold';
+        color: #2d3748;
+        margin-bottom: 12px;
+        font-size: 20px;
+      }
+
+      .success p {
+        color: #4a5568;
+        margin-bottom: 12px;
+      }
+
+      .success ol {
+        text-align: left;
+        padding-left: 24px;
+        color: #4a5568;
+        margin-bottom: 16px;
+      }
+
+      .success ol li {
+        margin-bottom: 8px;
+      }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -168,6 +218,18 @@
 
           <div id="error" class="error">Email ou clé d'activation invalide</div>
 
+          <div id="success" class="success">
+            <div class="success-icon">
+              <div class="checkmark"></div>
+            </div>
+            <h2>Activation réussie !</h2>
+            <p>Pour activer le mode Premium, veuillez :</p>
+            <ol>
+              <li>Fermer cette fenêtre</li>
+              <li>Actualiser la page de l'extension</li>
+            </ol>
+          </div>
+
           <button type="submit">Activer Premium</button>
         </form>
       </div>
@@ -198,11 +260,16 @@
           const data = await response.json();
 
           if (data.valid) {
+            // Cacher le formulaire
+            document.getElementById('activationForm').style.display = 'none';
+            // Afficher le message de succès
+            document.getElementById('success').style.display = 'block';
+            // Envoyer le message à l'extension
             window.opener.postMessage({ type: 'payment_success' }, '*');
-            alert(
-              'Activation réussie ! Vous pouvez maintenant fermer cette fenêtre.'
-            );
-            window.close();
+            // Fermer automatiquement après 10 secondes
+            setTimeout(() => {
+              window.close();
+            }, 10000);
           } else {
             errorDiv.textContent = data.message || 'Clé invalide';
             errorDiv.style.display = 'block';
