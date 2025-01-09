@@ -196,24 +196,28 @@
         <h1>Activation Extension Premium</h1>
 
         <form id="activationForm">
-          <div class="form-group">
-            <label for="email">Email :</label>
-            <input
-              type="email"
-              id="email"
-              required
-              placeholder="Votre adresse email"
-            />
-          </div>
+          <div class="input-container">
+            <div class="form-group">
+              <label for="email">Email :</label>
+              <input
+                type="email"
+                id="email"
+                required
+                placeholder="Votre adresse email"
+              />
+            </div>
 
-          <div class="form-group">
-            <label for="key">Clé d'activation :</label>
-            <input
-              type="text"
-              id="key"
-              required
-              placeholder="Votre clé d'activation"
-            />
+            <div class="form-group">
+              <label for="key">Clé d'activation :</label>
+              <input
+                type="text"
+                id="key"
+                required
+                placeholder="Votre clé d'activation"
+              />
+            </div>
+
+            <button type="submit">Activer Premium</button>
           </div>
 
           <div id="error" class="error">Email ou clé d'activation invalide</div>
@@ -229,8 +233,6 @@
               <li>Actualiser la page de l'extension</li>
             </ol>
           </div>
-
-          <button type="submit">Activer Premium</button>
         </form>
       </div>
     </div>
@@ -260,8 +262,8 @@
           const data = await response.json();
 
           if (data.valid) {
-            // Cacher le formulaire
-            document.getElementById('activationForm').style.display = 'none';
+            // Cacher les éléments du formulaire
+            document.querySelector('.input-container').style.display = 'none';
             // Afficher le message de succès
             document.getElementById('success').style.display = 'block';
             // Envoyer le message à l'extension
