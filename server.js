@@ -1,5 +1,5 @@
 // Mode Stripe (true = production, false = test)
-const STRIPE_MODE = false;
+const STRIPE_MODE = true;
 
 // Configuration des modules requis
 require('dotenv').config();
