@@ -26,6 +26,19 @@ app.use(cors());
 app.use(express.static(__dirname));
 app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
 
+// Routes pour servir les fichiers HTML
+app.get('/payment.html', (req, res) => {
+  res.sendFile(__dirname + '/payment.html');
+});
+
+app.get('/activation.html', (req, res) => {
+  res.sendFile(__dirname + '/activation.html');
+});
+
+app.get('/success.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '/success.html'));
+});
+
 // Middleware de débogage pour les polices
 app.use('/fonts', (req, res, next) => {
   console.log('Requête de police:', req.path);
@@ -350,15 +363,6 @@ app.get('/success', async (req, res) => {
 // Route pour gérer l'annulation du paiement
 app.get('/cancel', (req, res) => {
   res.send('Paiement annulé. Vous pouvez fermer cette fenêtre.');
-});
-
-// Routes pour servir les fichiers HTML
-app.get('/payment.html', (req, res) => {
-  res.sendFile(__dirname + '/payment.html');
-});
-
-app.get('/activation.html', (req, res) => {
-  res.sendFile(__dirname + '/activation.html');
 });
 
 // Route pour vérifier les clés d'activation
