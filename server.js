@@ -360,6 +360,49 @@ app.get('/success', async (req, res) => {
   }
 });
 
+// Route pour gérer le formulaire de contact
+app.post('/api/contact', async (req, res) => {
+  const { firstName, lastName, email, subject, message } = req.body;
+
+  try {
+    const mailOptions = {
+      from: {
+        name: 'Formulaire de Contact Immotep',
+        address: process.env.EMAIL_USER,
+      },
+      to: process.env.EMAIL_USER, // Envoi à votre adresse de contact
+      replyTo: email, // Permet de répondre directement à l'expéditeur
+      subject: `Nouveau message de contact : ${subject}`,
+      html: `
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+          <h2>Nouveau message de contact</h2>
+          <p><strong>Nom :</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email :</strong> ${email}</p>
+          <p><strong>Sujet :</strong> ${subject}</p>
+          <hr>
+          <h3>Message :</h3>
+          <p>${message}</p>
+        </div>
+      `,
+    };
+
+    // Envoi de l'email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email de contact envoyé:', info);
+
+    res.status(200).json({
+      success: true,
+      message: 'Votre message a été envoyé avec succès',
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'email de contact:", error);
+    res.status(500).json({
+      success: false,
+      message: "Une erreur est survenue lors de l'envoi du message",
+    });
+  }
+});
+
 // Route pour gérer l'annulation du paiement
 app.get('/cancel', (req, res) => {
   res.send('Paiement annulé. Vous pouvez fermer cette fenêtre.');
